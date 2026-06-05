@@ -148,7 +148,7 @@ export function Assistant() {
               {ASSISTANT.send[lang]}
             </button>
           </form>
-          <div className="asst-powered">Powered by Claude · grounded in Infostream's portfolio</div>
+          <div className="asst-powered">Powered by Claude · grounded in Infostream&apos;s portfolio</div>
         </div>
       </aside>
     </>
