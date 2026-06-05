@@ -12,6 +12,7 @@ export function CTA() {
       <StreamLayer />
       <div className="wrap">
         <Reveal>
+          <div className="kick">{STR.cta.kicker[lang]}</div>
           <h2>{STR.cta.title[lang]}</h2>
           <p>{STR.cta.lead[lang]}</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>

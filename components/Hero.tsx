@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useUI } from "@/app/providers";
 import { STR, HERO_PREFIX } from "@/lib/content";
 import { Reveal } from "./Reveal";
@@ -9,12 +10,25 @@ import { RotatingText } from "./RotatingText";
 
 export function Hero() {
   const { lang } = useUI();
+  const ref = useRef<HTMLElement>(null);
+  const [paused, setPaused] = useState(false);
+
+  // Pause the hero's always-on glow/float animations once it scrolls offscreen.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setPaused(!e.isIntersecting), { threshold: 0 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className="hero" id="top">
+    <section className={`hero${paused ? " paused" : ""}`} id="top" ref={ref}>
       <StreamLayer />
       <div className="wrap grid">
         <div>
           <Reveal>
+            <div className="kick">{STR.hero.kicker[lang]}</div>
             <h1 className="hero-h1">
               {HERO_PREFIX[lang]}
               <br />

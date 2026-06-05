@@ -382,6 +382,34 @@ export const SECTORS = {
   ] as T[],
 };
 
+/* Shared UI microcopy — keep all chrome/labels bilingual (no hardcoded English). */
+export const UI = {
+  menu: { en: "Menu", me: "Meni" },
+  openMenu: { en: "Open menu", me: "Otvori meni" },
+  closeMenu: { en: "Close menu", me: "Zatvori meni" },
+  backToTop: { en: "Back to top", me: "Na vrh" },
+  contact: { en: "Contact", me: "Kontakt" },
+  about: { en: "About", me: "O nama" },
+  sinceProd: { en: "In production since 2004", me: "U produkciji od 2004." },
+  // work registry
+  flagshipSystems: { en: "flagship systems", me: "ključni sistemi" },
+  live: { en: "live", me: "uživo" },
+  colId: { en: "ID", me: "ID" },
+  colSystem: { en: "System", me: "Sistem" },
+  colAuthority: { en: "Authority", me: "Institucija" },
+  colStatus: { en: "Status", me: "Status" },
+  records: { en: "records", me: "zapisa" },
+  // why pipeline
+  requestLifecycle: { en: "request lifecycle", me: "životni ciklus zahtjeva" },
+  endToEnd: { en: "end-to-end · audited", me: "od kraja do kraja · revidirano" },
+  enforced: { en: "enforced", me: "sprovedeno" },
+} satisfies Record<string, T>;
+
+export const DOC_TITLE: T = {
+  en: "Infostream — Critical digital infrastructure for Montenegro",
+  me: "Infostream — Kritična digitalna infrastruktura za Crnu Goru",
+};
+
 export const ASSISTANT = {
   title: { en: "Ask Infostream", me: "Pitajte Infostream" },
   greeting: { en: "Ask about our systems, products or track record.", me: "Pitajte o našim sistemima, proizvodima ili iskustvu." },

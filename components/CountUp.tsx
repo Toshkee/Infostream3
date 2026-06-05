@@ -10,12 +10,14 @@ export function CountUp({
   suffix = "",
   prefix = "",
   duration = 1.4,
+  locale = "en-US",
 }: {
   to: number;
   decimals?: number;
   suffix?: string;
   prefix?: string;
   duration?: number;
+  locale?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [val, setVal] = useState(0);
@@ -63,7 +65,7 @@ export function CountUp({
   return (
     <span ref={ref}>
       {prefix}
-      {val.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+      {val.toLocaleString(locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
       {suffix}
     </span>
   );

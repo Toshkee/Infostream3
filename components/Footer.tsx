@@ -1,7 +1,7 @@
 "use client";
 
 import { useUI } from "@/app/providers";
-import { STR } from "@/lib/content";
+import { STR, UI } from "@/lib/content";
 import { Logo } from "./Logo";
 import { StreamLayer } from "./StreamLayer";
 
@@ -27,9 +27,9 @@ export function Footer() {
           </div>
           <div className="fcol">
             <h4>{STR.footer.colCompany[lang]}</h4>
-            <a href="#top">About</a>
-            <a href="#security">Security</a>
-            <a href="#contact">Contact</a>
+            <a href="#top">{UI.about[lang]}</a>
+            <a href="#security">{STR.nav.security[lang]}</a>
+            <a href="#contact">{UI.contact[lang]}</a>
           </div>
           <div className="fcol">
             <h4>{STR.footer.colTrust[lang]}</h4>
@@ -40,7 +40,7 @@ export function Footer() {
         </div>
         <div className="fbot">
           <span>© 2026 Infostream d.o.o. · {STR.footer.rights[lang]}</span>
-          <span>In production since 2004</span>
+          <span>{UI.sinceProd[lang]}</span>
         </div>
       </div>
     </footer>

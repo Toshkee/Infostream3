@@ -31,7 +31,7 @@ export function VideoFrame({
           </span>
         )}
       </div>
-      <video src={src} poster={poster} autoPlay muted loop playsInline preload="auto" />
+      <video src={src} poster={poster} autoPlay muted loop playsInline preload="metadata" />
     </div>
   );
 }

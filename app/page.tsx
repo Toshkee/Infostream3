@@ -15,6 +15,7 @@ import { Security } from "@/components/Security";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { Assistant } from "@/components/Assistant";
+import { BackToTop } from "@/components/BackToTop";
 
 export default function Home() {
   return (
@@ -38,6 +39,7 @@ export default function Home() {
       </main>
       <Footer />
       <Assistant />
+      <BackToTop />
     </>
   );
 }

@@ -18,6 +18,7 @@ export function Systems() {
       <div className="wrap">
         <div className="shead2">
           <Reveal>
+            <div className="kick">{STR.systems.kicker[lang]}</div>
             <h2>{STR.systems.title[lang]}</h2>
             <p>{STR.systems.lead[lang]}</p>
           </Reveal>
@@ -33,7 +34,7 @@ export function Systems() {
                   <i />
                   <span className="addr">{ADDR[s.id]}</span>
                 </div>
-                <video src={s.video} poster={s.poster} autoPlay muted loop playsInline preload="auto" />
+                <video src={s.video} poster={s.poster} autoPlay muted loop playsInline preload="none" />
               </div>
               <div className="show-body">
                 <div className="ci">{s.owner[lang]}</div>

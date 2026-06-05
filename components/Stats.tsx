@@ -8,6 +8,7 @@ import { StreamLayer } from "./StreamLayer";
 
 export function Stats() {
   const { lang } = useUI();
+  const locale = lang === "me" ? "de-DE" : "en-US";
   return (
     <section style={{ paddingTop: 10 }} id="metrics">
       <StreamLayer />
@@ -19,7 +20,7 @@ export function Stats() {
                 <div className="stat" key={s.l.en}>
                   <div className="v">
                     {s.count != null ? (
-                      <CountUp to={s.count} decimals={s.decimals ?? 0} suffix={s.suffix ?? ""} />
+                      <CountUp to={s.count} decimals={s.decimals ?? 0} suffix={s.suffix ?? ""} locale={locale} />
                     ) : (
                       s.v
                     )}
