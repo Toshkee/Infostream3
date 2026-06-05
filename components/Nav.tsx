@@ -1,17 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUI } from "@/app/providers";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { Logo } from "./Logo";
-import { STR, PRODUCT_LINES, UI } from "@/lib/content";
+import { STR, UI } from "@/lib/content";
 
 const SECTION_IDS = ["products", "systems", "approach", "work"] as const;
+
+function AiIcon() {
+  return (
+    <svg className="ai-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4L12 3z" fill="currentColor" />
+      <path d="M18.4 13.5l.8 2.3 2.3.8-2.3.8-.8 2.3-.8-2.3-2.3-.8 2.3-.8.8-2.3z" fill="currentColor" opacity=".6" />
+    </svg>
+  );
+}
 
 export function Nav() {
   const { lang, setLang, theme, toggleTheme } = useUI();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("");
+  const sheetRef = useRef<HTMLElement>(null);
+
+  // Keep keyboard focus inside the open mobile menu; restore it to the toggle.
+  useFocusTrap(sheetRef, menuOpen);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -66,28 +80,19 @@ export function Nav() {
   ];
 
   return (
-    <header className={`nav${scrolled ? " scrolled" : ""}`}>
-      <div className="bar">
+    <>
+      <a className="skip-link" href="#main">
+        {UI.skipToContent[lang]}
+      </a>
+      <header className={`nav${scrolled ? " scrolled" : ""}`}>
+        <div className="bar">
         <a className="brand" href="#top" aria-label="Infostream — home">
           <Logo height={22} />
         </a>
         <nav className="navlinks" aria-label="Primary">
-          <div className="navitem">
-            <a href="#products" className={active === "products" ? "active" : undefined}>
-              {lang === "en" ? "Products" : "Proizvodi"}
-            </a>
-            <div className="dropdown">
-              {PRODUCT_LINES.map((p) => (
-                <a className="dropitem" href="#products" key={p.name}>
-                  <span className="dot" style={{ background: p.color }} />
-                  <span>
-                    <span className="dn">{p.name}</span>
-                    <span className="dt">{p.tagline[lang]}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
+          <a href="#products" className={active === "products" ? "active" : undefined}>
+            {lang === "en" ? "Products" : "Proizvodi"}
+          </a>
           <a href="#systems" className={active === "systems" ? "active" : undefined}>
             {STR.nav.systems[lang]}
           </a>
@@ -104,19 +109,11 @@ export function Nav() {
               MNE
             </button>
             <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>
-              EN
+              ENG
             </button>
           </span>
           <button className="iconbtn" onClick={toggleTheme} aria-label="Toggle light / dark theme">
             {theme === "dark" ? "☀" : "☾"}
-          </button>
-          <button className="askbtn" onClick={openAssistant} aria-label="Ask Infostream">
-            <span className="wf" aria-hidden>
-              <i />
-              <i />
-              <i />
-            </span>
-            {lang === "en" ? "Ask AI" : "Pitaj AI"}
           </button>
           <a className="btn btn-cta" href="#contact">
             {STR.nav.talk[lang]}
@@ -139,7 +136,7 @@ export function Nav() {
 
       <div className={`mobilemenu${menuOpen ? " open" : ""}`}>
         <div className="scrim" onClick={() => setMenuOpen(false)} aria-hidden />
-        <nav className="sheet" id="mobile-nav" aria-label={UI.menu[lang]}>
+        <nav className="sheet" id="mobile-nav" aria-label={UI.menu[lang]} ref={sheetRef}>
           {links.map((l) => (
             <a
               key={l.href}
@@ -160,18 +157,14 @@ export function Nav() {
                 MNE
               </button>
               <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>
-                EN
+                ENG
               </button>
             </span>
             <button className="iconbtn" onClick={toggleTheme} aria-label="Toggle light / dark theme">
               {theme === "dark" ? "☀" : "☾"}
             </button>
             <button className="askbtn" onClick={openAssistant} aria-label="Ask Infostream">
-              <span className="wf" aria-hidden>
-                <i />
-                <i />
-                <i />
-              </span>
+              <AiIcon />
               {lang === "en" ? "Ask AI" : "Pitaj AI"}
             </button>
             <a className="btn btn-cta" href="#contact" onClick={() => setMenuOpen(false)}>
@@ -180,6 +173,7 @@ export function Nav() {
           </div>
         </nav>
       </div>
-    </header>
+      </header>
+    </>
   );
 }

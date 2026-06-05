@@ -40,9 +40,6 @@ export function Hero() {
           </Reveal>
           <Reveal delay={0.16}>
             <div className="cta">
-              <a className="btn btn-primary" href="#systems">
-                {STR.hero.cta1[lang]}
-              </a>
               <a className="btn btn-ghost" href="#contact">
                 {STR.hero.cta2[lang]}
               </a>

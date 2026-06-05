@@ -12,10 +12,10 @@ function wavePath(baseline: number, amp: number, period: number, width = 2400) {
 }
 
 const WAVES = [
-  { baseline: 70, amp: 30, period: 460, dur: 13, color: "url(#streamG)", op: 0.42, sw: 3 },
-  { baseline: 128, amp: 40, period: 520, dur: 17, color: "url(#streamG)", op: 0.34, sw: 2.5 },
-  { baseline: 196, amp: 26, period: 400, dur: 11, color: "var(--accent)", op: 0.32, sw: 2.5 },
-  { baseline: 258, amp: 34, period: 560, dur: 19, color: "var(--coral)", op: 0.28, sw: 2.5 },
+  { baseline: 70, amp: 30, period: 460, dur: 13, color: "url(#streamG)", op: 0.22, sw: 3 },
+  { baseline: 128, amp: 40, period: 520, dur: 17, color: "url(#streamG)", op: 0.18, sw: 2.5 },
+  { baseline: 196, amp: 26, period: 400, dur: 11, color: "var(--accent)", op: 0.17, sw: 2.5 },
+  { baseline: 258, amp: 34, period: 560, dur: 19, color: "var(--coral)", op: 0.15, sw: 2.5 },
 ];
 
 export function StreamLayer({ flip = false }: { flip?: boolean }) {

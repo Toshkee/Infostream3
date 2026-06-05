@@ -12,6 +12,7 @@ import { Technologies } from "@/components/Technologies";
 import { Sectors } from "@/components/Sectors";
 import { WhyStatement } from "@/components/WhyStatement";
 import { Security } from "@/components/Security";
+import { FAQ } from "@/components/FAQ";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { Assistant } from "@/components/Assistant";
@@ -23,7 +24,7 @@ export default function Home() {
       <SmoothScroll />
       <ScrollProgress />
       <Nav />
-      <main>
+      <main id="main" tabIndex={-1}>
         <Hero />
         <TrustStrip />
         <Stats />
@@ -35,6 +36,7 @@ export default function Home() {
         <Sectors />
         <WhyStatement />
         <Security />
+        <FAQ />
         <CTA />
       </main>
       <Footer />

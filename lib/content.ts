@@ -382,12 +382,65 @@ export const SECTORS = {
   ] as T[],
 };
 
+export const FAQ = {
+  title: { en: "Frequently asked", me: "Česta pitanja" },
+  lead: {
+    en: "Straight answers to what institutions and partners ask us most.",
+    me: "Direktni odgovori na ono što nas institucije i partneri najčešće pitaju.",
+  },
+  items: [
+    {
+      q: { en: "Do you operate the systems after delivery, or only build them?", me: "Da li održavate sisteme nakon isporuke ili ih samo gradite?" },
+      a: {
+        en: "We operate what we build. The team that designs a system is the same team running it years later — continuity is the product, not an afterthought.",
+        me: "Održavamo ono što gradimo. Tim koji projektuje sistem isti je tim koji ga održava godinama kasnije — kontinuitet je proizvod, ne naknadna misao.",
+      },
+    },
+    {
+      q: { en: "How do you handle security and compliance?", me: "Kako rješavate bezbjednost i usaglašenost?" },
+      a: {
+        en: "We are certified to ISO 27001 (information security) and ISO 9001 (quality), partner with Bitdefender Enterprise, and build audit trails, access logs and digital signatures into every system by default.",
+        me: "Sertifikovani smo po ISO 27001 (bezbjednost informacija) i ISO 9001 (kvalitet), partner nam je Bitdefender Enterprise, a tragove revizije, dnevnike pristupa i digitalne potpise ugrađujemo u svaki sistem.",
+      },
+    },
+    {
+      q: { en: "What technologies do you build on?", me: "Na kojim tehnologijama gradite?" },
+      a: {
+        en: "Stable, well-understood tooling chosen for longevity: Oracle Database, Oracle APEX and SQL for data; C# and .NET for application logic; Angular and JavaScript on the interface.",
+        me: "Stabilni, dobro poznati alati birani zbog trajnosti: Oracle Database, Oracle APEX i SQL za podatke; C# i .NET za logiku; Angular i JavaScript na interfejsu.",
+      },
+    },
+    {
+      q: { en: "Do you work outside Montenegro?", me: "Da li radite van Crne Gore?" },
+      a: {
+        en: "Our home is Montenegro's public sector, but we've delivered for international bodies too — including the United Nations (UNIDO) and EU pre-accession assistance programs.",
+        me: "Naš dom je javni sektor Crne Gore, ali smo isporučivali i za međunarodne institucije — uključujući Ujedinjene nacije (UNIDO) i programe pretpristupne pomoći EU.",
+      },
+    },
+    {
+      q: { en: "How long have your systems been in production?", me: "Koliko dugo su vaši sistemi u produkciji?" },
+      a: {
+        en: "Infostream has been building and running Montenegro's institutional software since 2004 — many of our systems have been live and continuously maintained for well over a decade.",
+        me: "Infostream gradi i održava institucionalni softver Crne Gore od 2004 — mnogi naši sistemi su u radu i kontinuirano se održavaju više od decenije.",
+      },
+    },
+    {
+      q: { en: "How do we start a conversation?", me: "Kako da započnemo razgovor?" },
+      a: {
+        en: "Email contact@infostream.me and we'll respond within one business day. If you operate something critical, we're glad to talk it through.",
+        me: "Pišite na contact@infostream.me i odgovorićemo u roku od jednog radnog dana. Ako vodite nešto kritično, rado ćemo razgovarati.",
+      },
+    },
+  ],
+};
+
 /* Shared UI microcopy — keep all chrome/labels bilingual (no hardcoded English). */
 export const UI = {
   menu: { en: "Menu", me: "Meni" },
   openMenu: { en: "Open menu", me: "Otvori meni" },
   closeMenu: { en: "Close menu", me: "Zatvori meni" },
   backToTop: { en: "Back to top", me: "Na vrh" },
+  skipToContent: { en: "Skip to content", me: "Pređi na sadržaj" },
   contact: { en: "Contact", me: "Kontakt" },
   about: { en: "About", me: "O nama" },
   sinceProd: { en: "In production since 2004", me: "U produkciji od 2004." },
@@ -416,6 +469,18 @@ export const ASSISTANT = {
   placeholder: { en: "Ask a question…", me: "Postavite pitanje…" },
   open: { en: "Ask Infostream", me: "Pitajte Infostream" },
   send: { en: "Send", me: "Pošalji" },
+  subtitle: { en: "Product guide", me: "Vodič kroz proizvode" },
+  close: { en: "Close", me: "Zatvori" },
+  stop: { en: "Stop", me: "Zaustavi" },
+  retry: { en: "Retry", me: "Pokušaj ponovo" },
+  error: {
+    en: "Something went wrong. Please try again, or email contact@infostream.me.",
+    me: "Došlo je do greške. Pokušajte ponovo ili pišite na contact@infostream.me.",
+  },
+  poweredBy: {
+    en: "AI-powered · grounded in Infostream's portfolio",
+    me: "Pokreće AI · zasnovano na Infostream portfoliju",
+  },
   chips: [
     { en: "What is SPRINTgov?", me: "Šta je SPRINTgov?" },
     { en: "SPRINTgov vs ERPStream?", me: "SPRINTgov ili ERPStream?" },

@@ -14,10 +14,15 @@ export function RotatingText() {
     return () => clearInterval(id);
   }, []);
 
+  const phrase = HERO_ROTATE[i][lang];
+  const dot = phrase.endsWith(".");
+  const body = dot ? phrase.slice(0, -1) : phrase;
+
   return (
     <span className="rotate-wrap">
       <span key={i} className="rotate-word">
-        {HERO_ROTATE[i][lang]}
+        {body}
+        {dot && <span className="rd">.</span>}
       </span>
     </span>
   );
