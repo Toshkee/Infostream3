@@ -185,6 +185,12 @@ export async function POST(req: Request) {
     const completion = await client.chat.completions.create({
       model: MODEL,
       max_tokens: 700,
+      // gemini-2.5-flash is a "thinking" model: by default it spends most of the
+      // max_tokens budget on hidden reasoning, then truncates the visible reply
+      // mid-sentence (finish_reason "length"). "none" turns thinking off so the
+      // whole budget goes to the answer. It's Gemini's value, not in OpenAI's
+      // type union, so it's cast through. (Flash supports a zero thinking budget.)
+      reasoning_effort: "none" as never,
       stream: true,
       messages: [
         { role: "system", content: SYSTEM },
