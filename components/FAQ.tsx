@@ -11,6 +11,7 @@ export function FAQ() {
       <div className="wrap">
         <div className="shead2">
           <Reveal>
+            <div className="kick">{FAQ_CONTENT.kicker[lang]}</div>
             <h2>{FAQ_CONTENT.title[lang]}</h2>
             <p>{FAQ_CONTENT.lead[lang]}</p>
           </Reveal>

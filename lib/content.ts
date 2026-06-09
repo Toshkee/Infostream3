@@ -124,8 +124,8 @@ export const STR = {
    Marked representative — confirm real figures with the client. */
 export const STATS: { v: string; l: T; count?: number; suffix?: string; decimals?: number }[] = [
   { v: "99.99%", l: { en: "Sustained uptime", me: "Raspoloživost" }, count: 99.99, suffix: "%", decimals: 2 },
-  { v: "€14.2B", l: { en: "Settled / year", me: "Poravnano / god" } },
-  { v: "1,756", l: { en: "Transactions / sec", me: "Transakcija / sek" }, count: 1756 },
+  { v: "€14.2B", l: { en: "Settled / yr · Settlement Ledger", me: "Poravnano / god · poravnanje" } },
+  { v: "1,700+", l: { en: "Peak transactions / sec", me: "Transakcija / sek (vrh)" }, count: 1700, suffix: "+" },
   { v: "6", l: { en: "National institutions", me: "Nacionalnih institucija" }, count: 6 },
   { v: "20+", l: { en: "Years in production", me: "Godina u radu" }, count: 20, suffix: "+" },
 ];
@@ -213,6 +213,20 @@ export const SYSTEMS: SystemItem[] = [
   },
 ];
 
+/* Credibility banner folded into the Systems bento — the moderate IA merge:
+   flagship-level proof is surfaced here; the full categorized portfolio stays in Work. */
+export const SYSTEMS_BANNER = {
+  title: {
+    en: "20+ years in production, across six national institutions.",
+    me: "20+ godina u produkciji, u šest nacionalnih institucija.",
+  },
+  lead: {
+    en: "The teams that built these platforms still run them — from the Tax Authority and Treasury to the Central Bank's settlement estate.",
+    me: "Timovi koji su izgradili ove platforme i danas ih održavaju — od Poreske uprave i Trezora do sistema poravnanja Centralne banke.",
+  },
+  names: ["SPRINTgov", "Taxis · UCG3", "Fond PIO", "CRPS · eFirma", "Trezor"],
+};
+
 export function t(s: T, lang: Lang): string {
   return s[lang];
 }
@@ -243,7 +257,6 @@ export const PRODUCT_LINES: ProductLine[] = [
   { name: "FINStream", color: "#2563EB", tagline: { en: "Finance & accounting that scales from institutions to SMEs.", me: "Finansije i računovodstvo, od institucija do MSP." } },
   { name: "INFODMS", color: "#7C3AED", tagline: { en: "Secure document management for the most sensitive institutions.", me: "Bezbjedno upravljanje dokumentima za najosjetljivije institucije." } },
   { name: "UCG3 · Taxis", color: "#D97706", tagline: { en: "The central tax platform powering national revenue collection.", me: "Centralna poreska platforma za naplatu državnih prihoda." } },
-  { name: "KLEFIS", color: "#0891B2", tagline: { en: "Specialized management software for hospitality.", me: "Specijalizovani softver za upravljanje u hotelijerstvu." } },
 ];
 
 export const FLAGSHIPS: Project[] = [
@@ -320,13 +333,22 @@ export const WORK_GROUPS: WorkGroup[] = [
 
 export const SECTIONS = {
   products: {
+    kicker: { en: "Products", me: "Proizvodi" },
     title: { en: "Our products", me: "Naši proizvodi" },
     lead: { en: "Five platforms — built once, deployed across the state and the market.", me: "Pet platformi — napravljene jednom, primijenjene u državi i na tržištu." },
   },
   work: {
+    kicker: { en: "Track record", me: "Iskustvo" },
     title: { en: "Two decades, in production", me: "Dvije decenije, u produkciji" },
     lead: { en: "A selection of the systems we've delivered and still run — for the institutions a country cannot afford to have go down.", me: "Izbor sistema koje smo isporučili i koje održavamo — za institucije koje država ne smije da izgubi." },
   },
+};
+
+/* Beyond public infrastructure — R&D + commercial work, kept as a footnote so it
+   doesn't dilute the "systems a country depends on" thesis. */
+export const RND_NOTE: T = {
+  en: "Beyond public infrastructure, our R&D and commercial work includes DotBond — a C# ⇄ TypeScript developer tool — and KLEFIS, hospitality-management software.",
+  me: "Pored javne infrastrukture, naš R&D i komercijalni rad uključuje DotBond — alat za C# ⇄ TypeScript — i KLEFIS, softver za upravljanje u hotelijerstvu.",
 };
 
 export const HERO_PREFIX: T = { en: "We build and run", me: "Gradimo i održavamo" };
@@ -340,6 +362,7 @@ export const HERO_ROTATE: T[] = [
 ];
 
 export const APPROACH = {
+  kicker: { en: "Process", me: "Proces" },
   title: { en: "How we work", me: "Kako radimo" },
   lead: {
     en: "The same four-stage method behind every system we've shipped — and the reason we can still run them years later.",
@@ -354,6 +377,7 @@ export const APPROACH = {
 };
 
 export const TECHNOLOGIES = {
+  kicker: { en: "The stack", me: "Tehnologija" },
   title: { en: "The stack underneath", me: "Tehnologija u osnovi" },
   lead: {
     en: "Stable, well-understood tooling — chosen for longevity, audit-trail and operational predictability over novelty.",
@@ -367,6 +391,7 @@ export const TECHNOLOGIES = {
 };
 
 export const SECTORS = {
+  kicker: { en: "Sectors", me: "Sektori" },
   title: { en: "Built for institutions that can't go down", me: "Za institucije koje ne smiju da stanu" },
   lead: {
     en: "Two decades of work across the public and private sector.",
@@ -383,6 +408,7 @@ export const SECTORS = {
 };
 
 export const FAQ = {
+  kicker: { en: "Questions", me: "Pitanja" },
   title: { en: "Frequently asked", me: "Česta pitanja" },
   lead: {
     en: "Straight answers to what institutions and partners ask us most.",

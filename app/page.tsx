@@ -28,10 +28,10 @@ export default function Home() {
         <Hero />
         <TrustStrip />
         <Stats />
-        <Products />
         <Systems />
-        <Approach />
         <Work />
+        <Products />
+        <Approach />
         <Technologies />
         <Sectors />
         <WhyStatement />

@@ -12,6 +12,7 @@ export function Sectors() {
       <div className="wrap">
         <div className="shead2">
           <Reveal>
+            <div className="kick">{SECTORS.kicker[lang]}</div>
             <h2>{SECTORS.title[lang]}</h2>
             <p>{SECTORS.lead[lang]}</p>
           </Reveal>

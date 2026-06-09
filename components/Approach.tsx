@@ -11,6 +11,7 @@ export function Approach() {
       <div className="wrap">
         <div className="shead2">
           <Reveal>
+            <div className="kick">{APPROACH.kicker[lang]}</div>
             <h2>{APPROACH.title[lang]}</h2>
             <p>{APPROACH.lead[lang]}</p>
           </Reveal>

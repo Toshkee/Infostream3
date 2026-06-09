@@ -6,7 +6,7 @@ import { useFocusTrap } from "@/lib/useFocusTrap";
 import { Logo } from "./Logo";
 import { STR, UI } from "@/lib/content";
 
-const SECTION_IDS = ["products", "systems", "approach", "work"] as const;
+const SECTION_IDS = ["systems", "work", "products", "approach", "security"] as const;
 
 function AiIcon() {
   return (
@@ -73,10 +73,11 @@ export function Nav() {
   };
 
   const links = [
-    { href: "#products", id: "products", label: lang === "en" ? "Products" : "Proizvodi" },
     { href: "#systems", id: "systems", label: STR.nav.systems[lang] },
-    { href: "#approach", id: "approach", label: lang === "en" ? "Approach" : "Pristup" },
     { href: "#work", id: "work", label: lang === "en" ? "Work" : "Projekti" },
+    { href: "#products", id: "products", label: lang === "en" ? "Products" : "Proizvodi" },
+    { href: "#approach", id: "approach", label: lang === "en" ? "Approach" : "Pristup" },
+    { href: "#security", id: "security", label: STR.nav.security[lang] },
   ];
 
   return (
@@ -90,17 +91,20 @@ export function Nav() {
           <Logo height={22} />
         </a>
         <nav className="navlinks" aria-label="Primary">
-          <a href="#products" className={active === "products" ? "active" : undefined}>
-            {lang === "en" ? "Products" : "Proizvodi"}
-          </a>
           <a href="#systems" className={active === "systems" ? "active" : undefined}>
             {STR.nav.systems[lang]}
+          </a>
+          <a href="#work" className={active === "work" ? "active" : undefined}>
+            {lang === "en" ? "Work" : "Projekti"}
+          </a>
+          <a href="#products" className={active === "products" ? "active" : undefined}>
+            {lang === "en" ? "Products" : "Proizvodi"}
           </a>
           <a href="#approach" className={active === "approach" ? "active" : undefined}>
             {lang === "en" ? "Approach" : "Pristup"}
           </a>
-          <a href="#work" className={active === "work" ? "active" : undefined}>
-            {lang === "en" ? "Work" : "Projekti"}
+          <a href="#security" className={active === "security" ? "active" : undefined}>
+            {STR.nav.security[lang]}
           </a>
         </nav>
         <div className="navright">

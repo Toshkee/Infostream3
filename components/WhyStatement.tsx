@@ -16,10 +16,10 @@ export function WhyStatement() {
       <div className="wrap">
         <Reveal>
           <div className="statement">
-            <div className="why-kick">{`// ${STR.why.kicker[lang]}`}</div>
-            <div className="big">
+            <div className="kick">{`// ${STR.why.kicker[lang]}`}</div>
+            <h2 className="big">
               <span className="em">{first}</span> {rest.join(" ")}
-            </div>
+            </h2>
           </div>
         </Reveal>
 

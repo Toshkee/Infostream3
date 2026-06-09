@@ -11,6 +11,7 @@ export function Technologies() {
       <div className="wrap">
         <div className="shead2">
           <Reveal>
+            <div className="kick">{TECHNOLOGIES.kicker[lang]}</div>
             <h2>{TECHNOLOGIES.title[lang]}</h2>
             <p>{TECHNOLOGIES.lead[lang]}</p>
           </Reveal>

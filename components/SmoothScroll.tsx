@@ -41,7 +41,7 @@ export function SmoothScroll() {
       return () => document.removeEventListener("click", onClick);
     }
 
-    const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
+    const lenis = new Lenis({ duration: 0.8, smoothWheel: true });
     window.__lenis = lenis;
     let raf = 0;
     const loop = (time: number) => {

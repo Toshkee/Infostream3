@@ -3,13 +3,11 @@
 import { useUI } from "@/app/providers";
 import { STR, UI } from "@/lib/content";
 import { Logo } from "./Logo";
-import { StreamLayer } from "./StreamLayer";
 
 export function Footer() {
   const { lang } = useUI();
   return (
     <footer id="footer">
-      <StreamLayer flip />
       <div className="wrap">
         <div className="fgrid">
           <div className="fcol about">
@@ -23,7 +21,7 @@ export function Footer() {
             <a href="#systems">Legal Information System</a>
             <a href="#systems">NGO &amp; Party Registry</a>
             <a href="#systems">Treasury &amp; Budget</a>
-            <a href="#systems">DotBond</a>
+            <a href="#systems">Tax Filing Portal</a>
           </div>
           <div className="fcol">
             <h4>{STR.footer.colCompany[lang]}</h4>

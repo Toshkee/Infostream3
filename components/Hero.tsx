@@ -40,6 +40,9 @@ export function Hero() {
           </Reveal>
           <Reveal delay={0.16}>
             <div className="cta">
+              <a className="btn btn-cta" href="#systems">
+                {STR.hero.cta1[lang]}
+              </a>
               <a className="btn btn-ghost" href="#contact">
                 {STR.hero.cta2[lang]}
               </a>
@@ -66,6 +69,7 @@ export function Hero() {
             poster="/media/main.jpg"
             addr="infostream.me / legal-information-system"
             tabs={["Regulations", "Tasks", "Gazette"]}
+            label={STR.hero.frameLabel[lang]}
           />
         </Reveal>
       </div>

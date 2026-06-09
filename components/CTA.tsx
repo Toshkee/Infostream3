@@ -3,13 +3,11 @@
 import { useUI } from "@/app/providers";
 import { STR } from "@/lib/content";
 import { Reveal } from "./Reveal";
-import { StreamLayer } from "./StreamLayer";
 
 export function CTA() {
   const { lang } = useUI();
   return (
     <section id="contact" className="cta-band">
-      <StreamLayer />
       <div className="wrap">
         <Reveal>
           <div className="kick">{STR.cta.kicker[lang]}</div>

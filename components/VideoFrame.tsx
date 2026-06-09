@@ -6,16 +6,18 @@ export function VideoFrame({
   poster,
   addr,
   tabs,
+  label,
 }: {
   src: string;
   poster?: string;
   addr?: string;
   tabs?: string[];
+  label?: string;
 }) {
   return (
     <div className="product">
       <div className="pbar">
-        <span className="dots">
+        <span className="dots" aria-hidden>
           <i />
           <i />
           <i />
@@ -31,7 +33,7 @@ export function VideoFrame({
           </span>
         )}
       </div>
-      <video src={src} poster={poster} autoPlay muted loop playsInline preload="metadata" />
+      <video src={src} poster={poster} autoPlay muted loop playsInline preload="metadata" aria-label={label} />
     </div>
   );
 }
