@@ -6,13 +6,27 @@ import { useFocusTrap } from "@/lib/useFocusTrap";
 import { Logo } from "./Logo";
 import { STR, UI } from "@/lib/content";
 
-const SECTION_IDS = ["systems", "work", "products", "approach", "security"] as const;
+const SECTION_IDS = ["platform", "approach", "security"] as const;
 
 function AiIcon() {
   return (
     <svg className="ai-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4L12 3z" fill="currentColor" />
       <path d="M18.4 13.5l.8 2.3 2.3.8-2.3.8-.8 2.3-.8-2.3-2.3-.8 2.3-.8.8-2.3z" fill="currentColor" opacity=".6" />
+    </svg>
+  );
+}
+
+// SVG sun/moon to match the all-stroke icon language (replaces ☀/☾ text glyphs)
+function ThemeIcon({ dark }: { dark: boolean }) {
+  return dark ? (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </svg>
+  ) : (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
     </svg>
   );
 }
@@ -73,9 +87,7 @@ export function Nav() {
   };
 
   const links = [
-    { href: "#systems", id: "systems", label: STR.nav.systems[lang] },
-    { href: "#work", id: "work", label: lang === "en" ? "Work" : "Projekti" },
-    { href: "#products", id: "products", label: lang === "en" ? "Products" : "Proizvodi" },
+    { href: "#platform", id: "platform", label: STR.nav.platform[lang] },
     { href: "#approach", id: "approach", label: lang === "en" ? "Approach" : "Pristup" },
     { href: "#security", id: "security", label: STR.nav.security[lang] },
   ];
@@ -91,22 +103,17 @@ export function Nav() {
           <Logo height={22} />
         </a>
         <nav className="navlinks" aria-label="Primary">
-          <a href="#systems" className={active === "systems" ? "active" : undefined}>
-            {STR.nav.systems[lang]}
-          </a>
-          <a href="#work" className={active === "work" ? "active" : undefined}>
-            {lang === "en" ? "Work" : "Projekti"}
-          </a>
-          <a href="#products" className={active === "products" ? "active" : undefined}>
-            {lang === "en" ? "Products" : "Proizvodi"}
-          </a>
-          <a href="#approach" className={active === "approach" ? "active" : undefined}>
-            {lang === "en" ? "Approach" : "Pristup"}
-          </a>
-          <a href="#security" className={active === "security" ? "active" : undefined}>
-            {STR.nav.security[lang]}
-          </a>
+          {links.map((l) => (
+            <a key={l.href} href={l.href} className={active === l.id ? "active" : undefined}>
+              {l.label}
+            </a>
+          ))}
         </nav>
+        {/* live operational posture — leads the right cluster; static text, not a live region */}
+        <div className="nav-status">
+          <span className="pls" aria-hidden />
+          <span className="ns-text">{STR.nav.status[lang]}</span>
+        </div>
         <div className="navright">
           <span className="seg" role="group" aria-label="Language">
             <button aria-pressed={lang === "me"} onClick={() => setLang("me")}>
@@ -117,7 +124,7 @@ export function Nav() {
             </button>
           </span>
           <button className="iconbtn" onClick={toggleTheme} aria-label="Toggle light / dark theme">
-            {theme === "dark" ? "☀" : "☾"}
+            <ThemeIcon dark={theme === "dark"} />
           </button>
           <a className="btn btn-cta" href="#contact">
             {STR.nav.talk[lang]}
@@ -141,6 +148,10 @@ export function Nav() {
       <div className={`mobilemenu${menuOpen ? " open" : ""}`}>
         <div className="scrim" onClick={() => setMenuOpen(false)} aria-hidden />
         <nav className="sheet" id="mobile-nav" aria-label={UI.menu[lang]} ref={sheetRef}>
+          <div className="mm-status">
+            <span className="pls" aria-hidden />
+            {STR.nav.status[lang]}
+          </div>
           {links.map((l) => (
             <a
               key={l.href}
@@ -165,7 +176,7 @@ export function Nav() {
               </button>
             </span>
             <button className="iconbtn" onClick={toggleTheme} aria-label="Toggle light / dark theme">
-              {theme === "dark" ? "☀" : "☾"}
+              <ThemeIcon dark={theme === "dark"} />
             </button>
             <button className="askbtn" onClick={openAssistant} aria-label="Ask Infostream">
               <AiIcon />

@@ -13,11 +13,18 @@ export function CTA() {
           <div className="kick">{STR.cta.kicker[lang]}</div>
           <h2>{STR.cta.title[lang]}</h2>
           <p>{STR.cta.lead[lang]}</p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a className="btn btn-primary" href={`mailto:${STR.cta.email}`}>
+          <div className="cta-actions">
+            <a className="btn btn-cta" href={`mailto:${STR.cta.email}`}>
+              {STR.cta.button[lang]}
+            </a>
+            <a className="cta-mail" href={`mailto:${STR.cta.email}`}>
               {STR.cta.email}
             </a>
-            <a className="btn btn-ghost" href={`tel:${STR.cta.phone.replace(/\s/g, "")}`}>
+          </div>
+          <div className="cta-ops">
+            <span className="pls" aria-hidden />
+            <span className="cta-ops-l">{STR.cta.ops[lang]}</span>
+            <a className="cta-ops-num" href={`tel:${STR.cta.phone.replace(/\s/g, "")}`}>
               {STR.cta.phone}
             </a>
           </div>

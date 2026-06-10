@@ -4,10 +4,9 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Stats } from "@/components/Stats";
-import { Products } from "@/components/Products";
-import { Systems } from "@/components/Systems";
+import { Platform } from "@/components/Platform";
 import { Approach } from "@/components/Approach";
-import { Work } from "@/components/Work";
+import { CtaStrip } from "@/components/CtaStrip";
 import { Technologies } from "@/components/Technologies";
 import { Sectors } from "@/components/Sectors";
 import { WhyStatement } from "@/components/WhyStatement";
@@ -16,7 +15,6 @@ import { FAQ } from "@/components/FAQ";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { Assistant } from "@/components/Assistant";
-import { BackToTop } from "@/components/BackToTop";
 
 export default function Home() {
   return (
@@ -28,9 +26,8 @@ export default function Home() {
         <Hero />
         <TrustStrip />
         <Stats />
-        <Systems />
-        <Work />
-        <Products />
+        <Platform />
+        <CtaStrip which="work" />
         <Approach />
         <Technologies />
         <Sectors />
@@ -41,7 +38,6 @@ export default function Home() {
       </main>
       <Footer />
       <Assistant />
-      <BackToTop />
     </>
   );
 }

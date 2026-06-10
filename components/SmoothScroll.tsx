@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Lenis from "lenis";
+import type Lenis from "lenis";
 
 declare global {
   interface Window {
@@ -41,18 +41,27 @@ export function SmoothScroll() {
       return () => document.removeEventListener("click", onClick);
     }
 
-    const lenis = new Lenis({ duration: 0.8, smoothWheel: true });
-    window.__lenis = lenis;
+    // Load Lenis only for motion-OK users, and only after mount — keeps the
+    // library out of the initial bundle (anchor clicks fall back to native
+    // smooth scroll until it resolves).
+    let lenis: Lenis | undefined;
     let raf = 0;
-    const loop = (time: number) => {
-      lenis.raf(time);
+    let cancelled = false;
+    import("lenis").then(({ default: Lenis }) => {
+      if (cancelled) return;
+      lenis = new Lenis({ duration: 0.8, smoothWheel: true });
+      window.__lenis = lenis;
+      const loop = (time: number) => {
+        lenis!.raf(time);
+        raf = requestAnimationFrame(loop);
+      };
       raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
+    });
     return () => {
+      cancelled = true;
       document.removeEventListener("click", onClick);
       cancelAnimationFrame(raf);
-      lenis.destroy();
+      lenis?.destroy();
       delete window.__lenis;
     };
   }, []);

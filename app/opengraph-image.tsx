@@ -24,8 +24,8 @@ export default function OpengraphImage() {
           <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 40 }}>
             {[
               { h: 16, c: "#0A8C7B" },
-              { h: 34, c: "#15a08c" },
-              { h: 24, c: "#a86" },
+              { h: 34, c: "#159E8B" },
+              { h: 24, c: "#2DD4BF" },
               { h: 40, c: "#E5484D" },
             ].map((b, i) => (
               <div key={i} style={{ width: 7, height: b.h, background: b.c, borderRadius: 3, display: "flex" }} />
@@ -44,7 +44,7 @@ export default function OpengraphImage() {
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 26, fontSize: 22, color: "#6B727C" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 26, fontSize: 22, color: "#9AA1AB" }}>
           <div style={{ display: "flex", color: "#2DD4BF" }}>● In production since 2004</div>
           <div style={{ display: "flex" }}>ISO 27001 · ISO 9001</div>
         </div>

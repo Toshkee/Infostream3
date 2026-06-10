@@ -16,7 +16,7 @@ export function RotatingText() {
       setI(BROAD);
       return;
     }
-    const id = setInterval(() => setI((v) => (v + 1) % HERO_ROTATE.length), 2600);
+    const id = setInterval(() => setI((v) => (v + 1) % HERO_ROTATE.length), 1800);
     return () => clearInterval(id);
   }, []);
 

@@ -12,7 +12,7 @@ export function WhyStatement() {
   const enforced = UI.enforced;
 
   return (
-    <section style={{ paddingTop: 10 }}>
+    <section className="tonal sec-tight">
       <div className="wrap">
         <Reveal>
           <div className="statement">
@@ -60,22 +60,25 @@ export function WhyStatement() {
               <span className="pipe-label">{UI.requestLifecycle[lang]}</span>
               <span className="pipe-meta">{UI.endToEnd[lang]}</span>
             </div>
-            <div className="pipe-flow">
-              {STR.arch.map((n, i) => (
-                <Fragment key={n}>
-                  <span className={`pipe-node${i === 3 ? " acc" : ""}`}>
-                    <span className="pipe-i">{String(i + 1).padStart(2, "0")}</span>
-                    {n}
-                  </span>
-                  {i < STR.arch.length - 1 && (
-                    <span
-                      className="pipe-link"
-                      aria-hidden
-                      style={{ ["--fd"]: `${i * 0.45}s` } as CSSProperties}
-                    />
-                  )}
-                </Fragment>
-              ))}
+            <div className="pipe-flow" role="list" aria-label={UI.requestLifecycle[lang]}>
+              {STR.arch.map((n, i) => {
+                return (
+                  <Fragment key={n.name.en}>
+                    <div className="pipe-node" role="listitem">
+                      <span className="pn-ix">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="pn-name">{n.name[lang]}</span>
+                      <span className="pn-role">{n.role[lang]}</span>
+                    </div>
+                    {i < STR.arch.length - 1 && (
+                      <span
+                        className="pipe-link"
+                        aria-hidden
+                        style={{ ["--fd"]: `${i * 0.45}s` } as CSSProperties}
+                      />
+                    )}
+                  </Fragment>
+                );
+              })}
             </div>
           </div>
         </Reveal>

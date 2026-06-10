@@ -3,13 +3,13 @@ import {
   STR,
   STATS,
   INSTITUTIONS,
-  SYSTEMS,
+  PORTFOLIO,
+  SECTOR_LABELS,
   PRODUCT_LINES,
-  FLAGSHIPS,
-  WORK_GROUPS,
   APPROACH,
   TECHNOLOGIES,
   SECTORS,
+  type Sector,
 } from "@/lib/content";
 
 export const runtime = "nodejs";
@@ -23,20 +23,24 @@ type Msg = { role: "user" | "assistant"; content: string };
    the site can never drift apart — update the content, and both update. */
 function buildSiteContext(): string {
   const products = PRODUCT_LINES.map((p) => `- ${p.name}: ${p.tagline.en}`).join("\n");
-  const tech = TECHNOLOGIES.layers.map((l) => `- ${l.name.en}: ${l.items.join(", ")}`).join("\n");
-  const sectors = SECTORS.items.map((s) => s.en).join(", ");
+  const tech = TECHNOLOGIES.layers.map((l) => `- ${l.name.en} (${l.role.en}): ${l.items.join(", ")}`).join("\n");
+  const sectors = SECTORS.items.map((s) => s.name.en).join(", ");
   const institutions = INSTITUTIONS.map((i) => i.name.en).join(", ");
   const stats = STATS.map((s) => `- ${s.v} — ${s.l.en}`).join("\n");
-  const systems = SYSTEMS.map(
-    (s) => `- ${s.name.en} — for ${s.owner.en} [${s.tags.join(", ")}]: ${s.desc.en}`
-  ).join("\n");
-  const flagships = FLAGSHIPS.map(
-    (p) => `- ${p.name.en} (client: ${p.client.en}): ${p.blurb.en}`
-  ).join("\n");
-  const portfolio = WORK_GROUPS.map((g) => {
-    const items = g.projects.map((p) => `  • ${p.name.en} — ${p.client.en}: ${p.blurb.en}`).join("\n");
-    return `${g.title.en}:\n${items}`;
-  }).join("\n");
+  const sectorOrder: Sector[] = ["gov", "finance", "funds", "defense", "enterprise"];
+  const portfolio = sectorOrder
+    .map((sec) => {
+      const items = PORTFOLIO.filter((p) => p.sector === sec)
+        .map(
+          (p) =>
+            `  • ${p.name.en} — ${p.client.en} [${p.tags.join(", ")}]${
+              p.product ? ` (product: ${p.product})` : ""
+            }${p.featured ? " (flagship)" : ""}: ${p.blurb.en}`
+        )
+        .join("\n");
+      return `${SECTOR_LABELS[sec].en}:\n${items}`;
+    })
+    .join("\n");
   const approach = APPROACH.steps.map((s) => `${s.k}. ${s.h.en}: ${s.p.en}`).join("\n");
 
   return [
@@ -46,9 +50,7 @@ function buildSiteContext(): string {
     `\nSectors served: ${sectors}.`,
     `\nCurrently in production for: ${institutions}.`,
     `\nOperating metrics shown on the site:\n${stats}`,
-    `\nFlagship systems, live in production:\n${systems}`,
-    `\nFlagship projects:\n${flagships}`,
-    `\nFull delivered portfolio:\n${portfolio}`,
+    `\nDelivered & operated portfolio (the systems we build and run, grouped by sector):\n${portfolio}`,
     `\nHow we work (a four-stage method):\n${approach}`,
   ].join("\n");
 }

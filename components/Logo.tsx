@@ -1,19 +1,8 @@
-/* Original Infostream logo file (unmodified) on a clean white plate
-   so it reads correctly on both light and dark backgrounds. */
+/* The logo is teal bars + a red wordmark on a transparent background — both
+   colours read on light and dark, so it sits directly on the nav with no plate. */
 export function Logo({ height = 22 }: { height?: number }) {
-  const padY = Math.round(height * 0.3);
-  const padX = Math.round(height * 0.52);
   return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        background: "#ffffff",
-        borderRadius: 9,
-        padding: `${padY}px ${padX}px`,
-        boxShadow: "0 1px 4px rgba(20,22,30,.12)",
-      }}
-    >
+    <span style={{ display: "inline-flex", alignItems: "center" }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/logo.webp" alt="Infostream" height={height} style={{ height, width: "auto", display: "block" }} />
     </span>

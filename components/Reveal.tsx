@@ -24,17 +24,25 @@ export function Reveal({
       setShown(true);
       return;
     }
+    let failsafe = 0;
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
           setShown(true);
           io.disconnect();
+          window.clearTimeout(failsafe);
         }
       },
       { threshold: 0.08 }
     );
     io.observe(el);
-    const failsafe = window.setTimeout(() => setShown(true), 1200);
+    // Failsafe ONLY for content at/near the top on load, so a slow IO can't strand
+    // above-the-fold content. Genuinely below-fold sections wait for a real scroll
+    // intersection — otherwise the mount timer fires before the user scrolls and the
+    // whole reveal choreography is dead (it never plays).
+    if (el.getBoundingClientRect().top < window.innerHeight * 1.5) {
+      failsafe = window.setTimeout(() => setShown(true), 1200);
+    }
     return () => {
       io.disconnect();
       window.clearTimeout(failsafe);

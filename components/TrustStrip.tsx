@@ -6,20 +6,17 @@ import { Reveal } from "./Reveal";
 
 export function TrustStrip() {
   const { lang } = useUI();
-  const loop = [...INSTITUTIONS, ...INSTITUTIONS];
+  // Static registry grid (was an infinite marquee): permanence is the message,
+  // and it removes the WCAG 2.2.2 no-pause issue + the double SR announcement.
   return (
     <div className="wrap">
       <Reveal>
         <div className="trust">
           <div className="lbl">{STR.trust.label[lang]}</div>
-          <div className="marwrap">
-            <div className="marquee">
-              {loop.map((i, idx) => (
-                <span className="iname" key={idx}>
-                  {i.name[lang]}
-                </span>
-              ))}
-            </div>
+          <div className="names">
+            {INSTITUTIONS.map((i) => (
+              <span key={i.name.en}>{i.name[lang]}</span>
+            ))}
           </div>
         </div>
       </Reveal>

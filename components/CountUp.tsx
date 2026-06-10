@@ -47,14 +47,20 @@ export function CountUp({
       };
       raf = requestAnimationFrame(step);
     };
+    let failsafe = 0;
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         io.disconnect();
+        window.clearTimeout(failsafe);
         run();
       }
     });
     io.observe(el);
-    const failsafe = window.setTimeout(finish, 1600);
+    // Only snap-to-final for numbers near the top on load; below-fold counters wait
+    // for a real scroll intersection so the count-up animation actually plays.
+    if (el.getBoundingClientRect().top < window.innerHeight * 1.5) {
+      failsafe = window.setTimeout(finish, 1600);
+    }
     return () => {
       io.disconnect();
       cancelAnimationFrame(raf);

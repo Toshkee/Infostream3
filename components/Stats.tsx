@@ -9,7 +9,7 @@ export function Stats() {
   const { lang } = useUI();
   const locale = lang === "me" ? "de-DE" : "en-US";
   return (
-    <section style={{ paddingTop: 10 }} id="metrics">
+    <section className="tonal sec-tight" id="metrics">
       <div className="wrap">
         <Reveal>
           <div className="statsband">

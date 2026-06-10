@@ -4,19 +4,25 @@ export interface T {
   me: string;
 }
 
-export interface SystemItem {
+/** Sector buckets that drive the unified Platform explorer's filter bar. */
+export type Sector = "gov" | "finance" | "funds" | "defense" | "enterprise";
+
+/** One canonical record of work — merges the old SYSTEMS + FLAGSHIPS + WORK_GROUPS.
+ *  Items with `video`/`mini` get a live preview; `product` links to a PRODUCT_LINE. */
+export interface PortfolioItem {
   id: string;
-  owner: T;
+  sector: Sector;
   name: T;
-  desc: T;
+  client: T;
+  blurb: T;
   tags: string[];
+  product?: string;
+  featured?: boolean;
   /** optional looping product footage (in /public/media) */
   video?: string;
   poster?: string;
-  /** layout hint for the bento grid */
-  span?: "feature" | "full";
-  /** fallback mini-UI style when there is no video */
-  mini?: "dash" | "table" | "form" | "tree" | "timeline" | "matrix";
+  /** fallback mini-UI style when there is no live footage */
+  mini?: "dash" | "table" | "form";
 }
 
 export interface Institution {
@@ -93,10 +99,52 @@ export const STR = {
       },
     ],
   },
-  arch: ["Citizens", "Gateway", "Services", "Registry & Ledger", "Audit"],
+  arch: [
+    { name: { en: "Citizens", me: "Građani" }, role: { en: "request in", me: "zahtjev ulazi" } },
+    { name: { en: "Gateway", me: "Gateway" }, role: { en: "authenticated", me: "autentifikacija" } },
+    { name: { en: "Services", me: "Servisi" }, role: { en: "business rules", me: "poslovna pravila" } },
+    { name: { en: "Registry & Ledger", me: "Registar i evidencija" }, role: { en: "system of record", me: "sistem evidencije" } },
+    { name: { en: "Audit", me: "Revizija" }, role: { en: "immutable log", me: "nepromjenljiv zapis" } },
+  ],
   security: {
     kicker: { en: "Security & compliance", me: "Bezbjednost i usaglašenost" },
     title: { en: "Externally audited. Built to stay up.", me: "Eksterno revidirano. Građeno da traje." },
+    lead: {
+      en: "Independently certified to international standards and partnered for enterprise-grade threat protection — security here is verified by outside bodies, not self-declared.",
+      me: "Nezavisno sertifikovano po međunarodnim standardima, uz partnerstvo za zaštitu na nivou preduzeća — bezbjednost provjeravaju eksterna tijela, ne mi sami.",
+    },
+    certs: [
+      {
+        code: "ISO 27001",
+        icon: "shield" as const,
+        name: { en: "Information Security Management", me: "Upravljanje bezbjednošću informacija" },
+        desc: {
+          en: "The international standard for protecting data, controlling access and keeping operations continuous.",
+          me: "Međunarodni standard za zaštitu podataka, kontrolu pristupa i kontinuitet rada.",
+        },
+        tag: { en: "Externally audited", me: "Eksterno revidirano" },
+      },
+      {
+        code: "ISO 9001",
+        icon: "quality" as const,
+        name: { en: "Quality Management", me: "Upravljanje kvalitetom" },
+        desc: {
+          en: "Consistent, documented processes across everything we build and operate.",
+          me: "Dosljedni, dokumentovani procesi u svemu što gradimo i održavamo.",
+        },
+        tag: { en: "Externally audited", me: "Eksterno revidirano" },
+      },
+      {
+        code: "Bitdefender",
+        icon: "bolt" as const,
+        name: { en: "Enterprise threat protection", me: "Zaštita od prijetnji za preduzeća" },
+        desc: {
+          en: "Enterprise-grade endpoint and threat defense across our systems.",
+          me: "Zaštita krajnjih tačaka i odbrana od prijetnji na nivou preduzeća.",
+        },
+        tag: { en: "Security partner", me: "Bezbjednosni partner" },
+      },
+    ],
   },
   cta: {
     kicker: { en: "Get in touch", me: "Kontakt" },
@@ -105,7 +153,10 @@ export const STR = {
       en: "We respond to enquiries within one business day. For incidents, use the operations line.",
       me: "Na upite odgovaramo u roku od jednog radnog dana. Za incidente koristite operativnu liniju.",
     },
+    button: { en: "Start a conversation", me: "Započnite razgovor" },
+    ops: { en: "Operations line · 24/7", me: "Operativna linija · 0–24" },
     email: "contact@infostream.me",
+    // TODO(client): replace placeholder with the real operations number before launch.
     phone: "+382 20 000 000",
   },
   footer: {
@@ -139,37 +190,67 @@ export const INSTITUTIONS: Institution[] = [
   { name: { en: "Ministry of Defense", me: "Ministarstvo odbrane" } },
 ];
 
-export const SYSTEMS: SystemItem[] = [
+/* Filter bar for the unified Platform explorer. "products" shows the product
+   lines; the rest filter PORTFOLIO by sector. */
+export const SECTOR_FILTERS: { key: Sector | "all" | "products"; label: T }[] = [
+  { key: "all", label: { en: "All", me: "Sve" } },
+  { key: "gov", label: { en: "Government", me: "Vlada" } },
+  { key: "finance", label: { en: "Tax & Finance", me: "Porezi i finansije" } },
+  { key: "funds", label: { en: "Funds & Agencies", me: "Fondovi i agencije" } },
+  { key: "defense", label: { en: "Defense & Security", me: "Odbrana i bezbjednost" } },
+  { key: "enterprise", label: { en: "Banking & Enterprise", me: "Banke i privreda" } },
+  { key: "products", label: { en: "Products", me: "Proizvodi" } },
+];
+
+export const SECTOR_LABELS: Record<Sector, T> = {
+  gov: { en: "Government", me: "Vlada i ministarstva" },
+  finance: { en: "Tax & Public Finance", me: "Porezi i javne finansije" },
+  funds: { en: "Funds & Agencies", me: "Fondovi i agencije" },
+  defense: { en: "Defense & Security", me: "Odbrana i bezbjednost" },
+  enterprise: { en: "Banking & Enterprise", me: "Banke i privreda" },
+};
+
+/* The single canonical body of work. Items with video/mini render a live
+   preview in the explorer; the rest render a terminal "record" view.
+   The AI assistant (app/api/assistant) is grounded in this same array. */
+export const PORTFOLIO: PortfolioItem[] = [
   {
-    id: "legal",
-    span: "feature",
-    owner: { en: "Official Gazette of Montenegro", me: "Službeni list Crne Gore" },
+    id: "legal", sector: "gov", featured: true,
     name: { en: "Legal Information System", me: "Pravni informacioni sistem" },
-    desc: {
+    client: { en: "Official Gazette of Montenegro", me: "Službeni list Crne Gore" },
+    blurb: {
       en: "End-to-end management of laws and regulations — enter, classify, verify and publish, with a full workflow and immutable audit trail.",
       me: "Upravljanje zakonima i propisima od početka do kraja — unos, klasifikacija, verifikacija i objava, uz potpuni tok rada i nepromjenjiv trag revizije.",
     },
     tags: [".NET", "Angular", "Oracle"],
-    video: "/media/zadaci.mp4",
-    poster: "/media/zadaci.jpg",
+    video: "/media/zadaci.mp4", poster: "/media/zadaci.jpg",
   },
   {
-    id: "ngo",
-    owner: { en: "Min. of Public Administration", me: "Min. javne uprave" },
-    name: { en: "NGO & Party Registry", me: "Registar NVO i partija" },
-    desc: {
-      en: "Public registry platform for associations, foundations and political parties — registration, search and management.",
-      me: "Javna registarska platforma za udruženja, fondacije i političke partije — upis, pretraga i upravljanje.",
+    id: "tax", sector: "finance", featured: true, product: "UCG3 · Taxis",
+    name: { en: "National Tax System — UCG3 (Taxis) & VAT Refund", me: "Nacionalni poreski sistem — UCG3 (Taxis) i povraćaj PDV-a" },
+    client: { en: "Tax Administration of Montenegro", me: "Uprava prihoda i carina Crne Gore" },
+    blurb: {
+      en: "The state's central tax processing platform, including the citizen-facing online VAT credit refund service.",
+      me: "Centralna državna platforma za obradu poreza, sa onlajn servisom za povraćaj PDV-a za građane.",
     },
-    tags: ["Angular", "SQL"],
-    video: "/media/NVO.mp4",
-    poster: "/media/NVO.jpg",
+    tags: ["UCG3", "Tax", "Revenue"],
+    mini: "form",
   },
   {
-    id: "settlement",
-    owner: { en: "Central Bank of Montenegro", me: "Centralna banka Crne Gore" },
+    id: "sprintgov", sector: "gov", featured: true, product: "SPRINTgov",
+    name: { en: "SPRINTgov — Government ERP across the Cabinet", me: "SPRINTgov — državni ERP u Vladi" },
+    client: { en: "Ministries of European Affairs, Economic Development, Energy & Mining, Maritime Security", me: "Ministarstva evropskih poslova, ekonomskog razvoja, energetike i rudarstva, Uprava pomorske sigurnosti" },
+    blurb: {
+      en: "One standardized financial and operational ERP, rolled out ministry by ministry across the executive branch.",
+      me: "Jedan standardizovani finansijski i operativni ERP, uveden ministarstvo po ministarstvo u izvršnoj vlasti.",
+    },
+    tags: ["SPRINTgov", "Government", "ERP"],
+  },
+  {
+    id: "settlement", sector: "finance",
     name: { en: "National Settlement Ledger", me: "Nacionalni sistem poravnanja" },
-    desc: {
+    client: { en: "Central Bank of Montenegro", me: "Centralna banka Crne Gore" },
+    blurb: {
       en: "Real-time interbank settlement and reconciliation across the central-bank estate.",
       me: "Poravnanje i usaglašavanje među bankama u realnom vremenu.",
     },
@@ -177,55 +258,208 @@ export const SYSTEMS: SystemItem[] = [
     mini: "dash",
   },
   {
-    id: "treasury",
-    owner: { en: "Ministry of Finance", me: "Ministarstvo finansija" },
+    id: "pension", sector: "funds", featured: true,
+    name: { en: "Pension & Disability Insurance Fund — National IS", me: "Fond PIO — nacionalni informacioni sistem" },
+    client: { en: "Pension and Disability Insurance Fund of Montenegro", me: "Fond penzijskog i invalidskog osiguranja Crne Gore" },
+    blurb: {
+      en: "The core system calculating and disbursing benefits to the nation's pensioners — operated and upgraded continuously for over a decade.",
+      me: "Ključni sistem za obračun i isplatu prava penzionerima — kontinuirano održavan i unaprjeđivan više od decenije.",
+    },
+    tags: ["National Fund", "Mission-critical"],
+  },
+  {
+    id: "ngo", sector: "gov",
+    name: { en: "NGO & Party Registry", me: "Registar NVO i partija" },
+    client: { en: "Min. of Public Administration", me: "Min. javne uprave" },
+    blurb: {
+      en: "Public registry platform for associations, foundations and political parties — registration, search and management.",
+      me: "Javna registarska platforma za udruženja, fondacije i političke partije — upis, pretraga i upravljanje.",
+    },
+    tags: ["Angular", "SQL"],
+    video: "/media/NVO.mp4", poster: "/media/NVO.jpg",
+  },
+  {
+    id: "crps", sector: "finance", featured: true,
+    name: { en: "Central Register of Business Entities (CRPS) & eFirma", me: "Centralni registar privrednih subjekata (CRPS) i eFirma" },
+    client: { en: "Tax Administration of Montenegro", me: "Uprava prihoda i carina Crne Gore" },
+    blurb: {
+      en: "The authoritative national register of every company in Montenegro, with fully online incorporation through eFirma.",
+      me: "Mjerodavni nacionalni registar svih privrednih subjekata, sa potpuno onlajn registracijom kroz eFirma.",
+    },
+    tags: ["Registry", "e-Service"],
+  },
+  {
+    id: "treasury", sector: "finance",
     name: { en: "Treasury & Budget Execution", me: "Trezor i izvršenje budžeta" },
-    desc: {
-      en: "Budget execution, commitment control and statutory reporting.",
-      me: "Izvršenje budžeta, kontrola obaveza i zakonsko izvještavanje.",
+    client: { en: "Ministry of Finance", me: "Ministarstvo finansija" },
+    blurb: {
+      en: "Budget execution, commitment control and statutory reporting for the state treasury.",
+      me: "Izvršenje budžeta, kontrola obaveza i zakonsko izvještavanje za državni trezor.",
     },
     tags: ["Oracle", "SQL"],
     mini: "table",
   },
   {
-    id: "tax",
-    owner: { en: "Tax Authority", me: "Poreska uprava" },
-    name: { en: "Tax Filing Portal", me: "Portal za poreske prijave" },
-    desc: {
-      en: "Electronic filing and processing of tax returns with real-time validation.",
-      me: "Elektronsko podnošenje i obrada poreskih prijava uz validaciju u realnom vremenu.",
+    id: "defense", sector: "defense", product: "INFODMS",
+    name: { en: "INFODMS & Financial IS — Ministry of Defense", me: "INFODMS i finansijski IS — Ministarstvo odbrane" },
+    client: { en: "Ministry of Defense of Montenegro", me: "Ministarstvo odbrane Crne Gore" },
+    blurb: {
+      en: "Secure document management, including Military Intelligence, plus the ministry's financial system of record.",
+      me: "Bezbjedno upravljanje dokumentima, uključujući Vojnoobavještajnu službu, i finansijski sistem ministarstva.",
     },
-    tags: [".NET", "JS"],
-    mini: "form",
+    tags: ["INFODMS", "Defense"],
   },
   {
-    id: "dotbond",
-    span: "feature",
-    owner: { en: "Infostream R&D", me: "Infostream R&D" },
-    name: { en: "DotBond", me: "DotBond" },
-    desc: {
-      en: "Developer tooling that bonds C# and TypeScript — a document editor and type bridge for full-stack teams.",
-      me: "Razvojni alat koji povezuje C# i TypeScript — uređivač dokumenata i most tipova za full-stack timove.",
+    id: "parliament", sector: "gov", product: "ERPStream",
+    name: { en: "ERPStream — Parliament of Montenegro", me: "ERPStream — Skupština Crne Gore" },
+    client: { en: "Parliament of Montenegro", me: "Skupština Crne Gore" },
+    blurb: {
+      en: "The enterprise resource system for the national legislature.",
+      me: "Sistem za upravljanje resursima nacionalnog parlamenta.",
     },
-    tags: ["C#", "TypeScript"],
-    video: "/media/dotbond.mp4",
-    poster: "/media/dotbond.jpg",
+    tags: ["ERPStream", "Government"],
+  },
+  {
+    id: "erste", sector: "enterprise", product: "ERPStream",
+    name: { en: "ERPStream on Oracle 12c — ERSTE Bank", me: "ERPStream na Oracle 12c — ERSTE banka" },
+    client: { en: "ERSTE Bank AD Podgorica", me: "ERSTE banka AD Podgorica" },
+    blurb: {
+      en: "ERP upgrade and migration to current Oracle 12c infrastructure for a major commercial bank.",
+      me: "Unaprjeđenje i migracija ERP-a na Oracle 12c za veliku poslovnu banku.",
+    },
+    tags: ["ERPStream", "Banking"],
+  },
+  {
+    id: "intel", sector: "defense",
+    name: { en: "ERP — Intelligence Agency", me: "ERP — Agencija za nacionalnu bezbjednost" },
+    client: { en: "Intelligence Agency of Montenegro", me: "Agencija za nacionalnu bezbjednost" },
+    blurb: {
+      en: "Enterprise resource platform delivered for the national intelligence service.",
+      me: "Sistem za upravljanje resursima za nacionalnu obavještajnu službu.",
+    },
+    tags: ["ERP", "High-Trust"],
+  },
+  {
+    id: "interior", sector: "defense",
+    name: { en: "Licensing & Financial IS — Ministry of Interior", me: "Licenciranje i finansijski IS — MUP" },
+    client: { en: "Ministry of Interior of Montenegro", me: "Ministarstvo unutrašnjih poslova" },
+    blurb: {
+      en: "Registration and licensing of security activities, automated forced-collection of fines, and the ministry's financial backbone.",
+      me: "Registracija i licenciranje bezbjednosnih djelatnosti, prinudna naplata kazni i finansijska osnova ministarstva.",
+    },
+    tags: ["Licensing", "Finance"],
+  },
+  {
+    id: "address", sector: "gov",
+    name: { en: "Address Register of Montenegro", me: "Adresni registar Crne Gore" },
+    client: { en: "Government of Montenegro", me: "Vlada Crne Gore" },
+    blurb: {
+      en: "The official national addressing authority underpinning logistics, emergency services and e-government.",
+      me: "Zvanični nacionalni adresni sistem za logistiku, hitne službe i e-upravu.",
+    },
+    tags: ["Registry", "Infrastructure"],
+  },
+  {
+    id: "regulations", sector: "gov",
+    name: { en: "Register of Consolidated Regulations", me: "Registar prečišćenih propisa" },
+    client: { en: "Official Gazette of Montenegro", me: "Službeni list Crne Gore" },
+    blurb: {
+      en: "The legally authoritative, always-current text of every law and regulation in force.",
+      me: "Pravno mjerodavan i uvijek ažuran tekst svih važećih zakona i propisa.",
+    },
+    tags: ["Legal", "Registry"],
+  },
+  {
+    id: "hrma", sector: "gov",
+    name: { en: "Human Resources Management IS", me: "Sistem za upravljanje ljudskim resursima" },
+    client: { en: "Human Resources Management Authority (HRMA)", me: "Uprava za kadrove (HRMA)" },
+    blurb: {
+      en: "The whole-of-government HR platform managing Montenegro's civil service workforce.",
+      me: "Platforma za ljudske resurse cijele uprave koja vodi državnu službu.",
+    },
+    tags: ["HR", "Platform"],
+  },
+  {
+    id: "einovacije", sector: "funds",
+    name: { en: "einovacije.gov.me — National Innovation Portal", me: "einovacije.gov.me — nacionalni inovacioni portal" },
+    client: { en: "Innovation Fund of Montenegro", me: "Fond za inovacije Crne Gore" },
+    blurb: {
+      en: "Montenegro's official gateway to innovation programs, funding and the Register of Innovative Business Entities.",
+      me: "Zvanična kapija ka inovacionim programima, finansiranju i Registru inovativnih subjekata.",
+    },
+    tags: ["Portal", "Innovation"],
+  },
+  {
+    id: "ecofund", sector: "funds",
+    name: { en: "Eco Fund Information System", me: "Informacioni sistem Eko-fonda" },
+    client: { en: "Eco Fund of Montenegro", me: "Eko-fond Crne Gore" },
+    blurb: {
+      en: "Manages environmental subsidy and incentive programs nationwide.",
+      me: "Upravlja programima ekoloških subvencija na nivou cijele države.",
+    },
+    tags: ["National Fund", "Environment"],
+  },
+  {
+    id: "eces", sector: "finance",
+    name: { en: "eCES — EU Funds Contract Execution", me: "eCES — izvršenje ugovora EU fondova" },
+    client: { en: "Directorate for Finance & Contracting of EU Assistance Funds", me: "Direkcija za finansiranje i ugovaranje sredstava EU" },
+    blurb: {
+      en: "The system through which Montenegro administers and reports on EU pre-accession assistance contracts.",
+      me: "Sistem za administriranje i izvještavanje o ugovorima pretpristupne pomoći EU.",
+    },
+    tags: ["EU", "Compliance"],
+  },
+  {
+    id: "covid", sector: "gov",
+    name: { en: "COVID-19 Subsidy Platform", me: "Platforma za COVID-19 subvencije" },
+    client: { en: "Government of Montenegro", me: "Vlada Crne Gore" },
+    blurb: {
+      en: "A crisis-scale public platform that disbursed emergency aid to companies and employees under deadline pressure.",
+      me: "Platforma kriznih razmjera koja je isplaćivala hitnu pomoć kompanijama i zaposlenima pod pritiskom rokova.",
+    },
+    tags: ["Crisis Response", "Public Finance"],
+  },
+  {
+    id: "grants", sector: "gov",
+    name: { en: "Economy Competitiveness Grants Platform", me: "Platforma za grantove konkurentnosti" },
+    client: { en: "Government of Montenegro", me: "Vlada Crne Gore" },
+    blurb: {
+      en: "Online application and management portal for national economic-competitiveness incentives.",
+      me: "Onlajn portal za prijavu i upravljanje podsticajima konkurentnosti privrede.",
+    },
+    tags: ["Portal", "Grants"],
+  },
+  {
+    id: "rtcg", sector: "enterprise",
+    name: { en: "Integrated IS — RTCG National Broadcaster", me: "Integrisani IS — RTCG" },
+    client: { en: "Radio and Television of Montenegro", me: "Radio i Televizija Crne Gore" },
+    blurb: {
+      en: "End-to-end integrated information system for the national public broadcaster.",
+      me: "Integrisani informacioni sistem za nacionalnog javnog emitera.",
+    },
+    tags: ["Media", "Integration"],
+  },
+  {
+    id: "finstream", sector: "enterprise", product: "FINStream",
+    name: { en: "FINStream — Accounting Agencies & SMEs", me: "FINStream — agencije i MSP" },
+    client: { en: "Mijons, Praksis, Mils, Agens, Platon and others", me: "Mijons, Praksis, Mils, Agens, Platon i drugi" },
+    blurb: {
+      en: "Finance and accounting deployed across a portfolio of agencies and SMEs — the platform scales down-market.",
+      me: "Finansije i računovodstvo kod niza agencija i MSP — platforma je skalabilna.",
+    },
+    tags: ["FINStream", "SME"],
+  },
+  {
+    id: "unido", sector: "enterprise",
+    name: { en: "UNIDO — Industry & Cluster Web Portals", me: "UNIDO — portali za industriju i klastere" },
+    client: { en: "United Nations Industrial Development Organization", me: "Organizacija UN za industrijski razvoj (UNIDO)" },
+    blurb: {
+      en: "Multiple public web portals delivered for a United Nations agency, including the metal-cluster platform.",
+      me: "Više javnih portala za agenciju UN, uključujući platformu za metalski klaster.",
+    },
+    tags: ["UN", "International"],
   },
 ];
-
-/* Credibility banner folded into the Systems bento — the moderate IA merge:
-   flagship-level proof is surfaced here; the full categorized portfolio stays in Work. */
-export const SYSTEMS_BANNER = {
-  title: {
-    en: "20+ years in production, across six national institutions.",
-    me: "20+ godina u produkciji, u šest nacionalnih institucija.",
-  },
-  lead: {
-    en: "The teams that built these platforms still run them — from the Tax Authority and Treasury to the Central Bank's settlement estate.",
-    me: "Timovi koji su izgradili ove platforme i danas ih održavaju — od Poreske uprave i Trezora do sistema poravnanja Centralne banke.",
-  },
-  names: ["SPRINTgov", "Taxis · UCG3", "Fond PIO", "CRPS · eFirma", "Trezor"],
-};
 
 export function t(s: T, lang: Lang): string {
   return s[lang];
@@ -240,16 +474,6 @@ export interface ProductLine {
   tagline: T;
   color: string;
 }
-export interface Project {
-  name: T;
-  client: T;
-  blurb: T;
-  tags: string[];
-}
-export interface WorkGroup {
-  title: T;
-  projects: Project[];
-}
 
 export const PRODUCT_LINES: ProductLine[] = [
   { name: "SPRINTgov", color: "#0A8C7B", tagline: { en: "The government ERP standard, deployed across Montenegro's ministries.", me: "Standard državnog ERP-a, primijenjen u ministarstvima Crne Gore." } },
@@ -259,90 +483,17 @@ export const PRODUCT_LINES: ProductLine[] = [
   { name: "UCG3 · Taxis", color: "#D97706", tagline: { en: "The central tax platform powering national revenue collection.", me: "Centralna poreska platforma za naplatu državnih prihoda." } },
 ];
 
-export const FLAGSHIPS: Project[] = [
-  {
-    name: { en: "SPRINTgov — Government ERP across the Cabinet", me: "SPRINTgov — državni ERP u Vladi" },
-    client: { en: "Ministries of European Affairs, Economic Development, Energy & Mining, Maritime Security", me: "Ministarstva evropskih poslova, ekonomskog razvoja, energetike i rudarstva, Uprava pomorske sigurnosti" },
-    blurb: { en: "One standardized financial and operational ERP, rolled out ministry by ministry across the executive branch.", me: "Jedan standardizovani finansijski i operativni ERP, uveden ministarstvo po ministarstvo u izvršnoj vlasti." },
-    tags: ["SPRINTgov", "Government", "ERP"],
-  },
-  {
-    name: { en: "Pension & Disability Insurance Fund — National IS", me: "Fond PIO — nacionalni informacioni sistem" },
-    client: { en: "Pension and Disability Insurance Fund of Montenegro", me: "Fond penzijskog i invalidskog osiguranja Crne Gore" },
-    blurb: { en: "The core system calculating and disbursing benefits to the nation's pensioners — operated and upgraded continuously for over a decade.", me: "Ključni sistem za obračun i isplatu prava penzionerima — kontinuirano održavan i unaprjeđivan više od decenije." },
-    tags: ["National Fund", "Mission-critical"],
-  },
-  {
-    name: { en: "Central Register of Business Entities (CRPS) & eFirma", me: "Centralni registar privrednih subjekata (CRPS) i eFirma" },
-    client: { en: "Tax Administration of Montenegro", me: "Uprava prihoda i carina Crne Gore" },
-    blurb: { en: "The authoritative national register of every company in Montenegro, with fully online incorporation through eFirma.", me: "Mjerodavni nacionalni registar svih privrednih subjekata, sa potpuno onlajn registracijom kroz eFirma." },
-    tags: ["Registry", "e-Service"],
-  },
-  {
-    name: { en: "National Tax System — UCG3 (Taxis) & VAT Refund", me: "Nacionalni poreski sistem — UCG3 (Taxis) i povraćaj PDV-a" },
-    client: { en: "Tax Administration of Montenegro", me: "Uprava prihoda i carina Crne Gore" },
-    blurb: { en: "The state's central tax processing platform, including the citizen-facing online VAT credit refund service.", me: "Centralna državna platforma za obradu poreza, sa onlajn servisom za povraćaj PDV-a za građane." },
-    tags: ["UCG3", "Tax", "Revenue"],
-  },
-];
+/* The unified Platform section reuses STR.systems for its header; per-item and
+   per-sector copy lives on PORTFOLIO / SECTOR_FILTERS above. */
 
-export const WORK_GROUPS: WorkGroup[] = [
-  {
-    title: { en: "National Registers & Records", me: "Nacionalni registri i evidencije" },
-    projects: [
-      { name: { en: "Address Register of Montenegro", me: "Adresni registar Crne Gore" }, client: { en: "Government of Montenegro", me: "Vlada Crne Gore" }, blurb: { en: "The official national addressing authority underpinning logistics, emergency services and e-government.", me: "Zvanični nacionalni adresni sistem za logistiku, hitne službe i e-upravu." }, tags: ["Registry", "Infrastructure"] },
-      { name: { en: "Register of Consolidated Regulations", me: "Registar prečišćenih propisa" }, client: { en: "Official Gazette of Montenegro", me: "Službeni list Crne Gore" }, blurb: { en: "The legally authoritative, always-current text of every law and regulation in force.", me: "Pravno mjerodavan i uvijek ažuran tekst svih važećih zakona i propisa." }, tags: ["Legal", "Registry"] },
-      { name: { en: "Human Resources Management IS", me: "Sistem za upravljanje ljudskim resursima" }, client: { en: "Human Resources Management Authority (HRMA)", me: "Uprava za kadrove (HRMA)" }, blurb: { en: "The whole-of-government HR platform managing Montenegro's civil service workforce.", me: "Platforma za ljudske resurse cijele uprave koja vodi državnu službu." }, tags: ["HR", "Platform"] },
-    ],
-  },
-  {
-    title: { en: "Citizen & Business e-Services", me: "E-servisi za građane i privredu" },
-    projects: [
-      { name: { en: "einovacije.gov.me — National Innovation Portal", me: "einovacije.gov.me — nacionalni inovacioni portal" }, client: { en: "Innovation Fund of Montenegro", me: "Fond za inovacije Crne Gore" }, blurb: { en: "Montenegro's official gateway to innovation programs, funding and the Register of Innovative Business Entities.", me: "Zvanična kapija ka inovacionim programima, finansiranju i Registru inovativnih subjekata." }, tags: ["Portal", "Innovation"] },
-      { name: { en: "Eco Fund Information System", me: "Informacioni sistem Eko-fonda" }, client: { en: "Eco Fund of Montenegro", me: "Eko-fond Crne Gore" }, blurb: { en: "Manages environmental subsidy and incentive programs nationwide.", me: "Upravlja programima ekoloških subvencija na nivou cijele države." }, tags: ["National Fund", "Environment"] },
-      { name: { en: "COVID-19 Subsidy Platform", me: "Platforma za COVID-19 subvencije" }, client: { en: "Government of Montenegro", me: "Vlada Crne Gore" }, blurb: { en: "A crisis-scale public platform that disbursed emergency aid to companies and employees under deadline pressure.", me: "Platforma kriznih razmjera koja je isplaćivala hitnu pomoć kompanijama i zaposlenima pod pritiskom rokova." }, tags: ["Crisis Response", "Public Finance"] },
-      { name: { en: "Economy Competitiveness Grants Platform", me: "Platforma za grantove konkurentnosti" }, client: { en: "Government of Montenegro", me: "Vlada Crne Gore" }, blurb: { en: "Online application and management portal for national economic-competitiveness incentives.", me: "Onlajn portal za prijavu i upravljanje podsticajima konkurentnosti privrede." }, tags: ["Portal", "Grants"] },
-    ],
-  },
-  {
-    title: { en: "Defense, Security & High-Trust", me: "Odbrana, bezbjednost i visoko povjerenje" },
-    projects: [
-      { name: { en: "ERP — Intelligence Agency", me: "ERP — Agencija za nacionalnu bezbjednost" }, client: { en: "Intelligence Agency of Montenegro", me: "Agencija za nacionalnu bezbjednost" }, blurb: { en: "Enterprise resource platform delivered for the national intelligence service.", me: "Sistem za upravljanje resursima za nacionalnu obavještajnu službu." }, tags: ["ERP", "High-Trust"] },
-      { name: { en: "INFODMS & Financial IS — Ministry of Defense", me: "INFODMS i finansijski IS — Ministarstvo odbrane" }, client: { en: "Ministry of Defense of Montenegro", me: "Ministarstvo odbrane Crne Gore" }, blurb: { en: "Secure document management, including Military Intelligence, plus the ministry's financial system of record.", me: "Bezbjedno upravljanje dokumentima, uključujući Vojnoobavještajnu službu, i finansijski sistem ministarstva." }, tags: ["INFODMS", "Defense"] },
-      { name: { en: "Licensing & Financial IS — Ministry of Interior", me: "Licenciranje i finansijski IS — MUP" }, client: { en: "Ministry of Interior of Montenegro", me: "Ministarstvo unutrašnjih poslova" }, blurb: { en: "Registration and licensing of security activities, automated forced-collection of fines, and the ministry's financial backbone.", me: "Registracija i licenciranje bezbjednosnih djelatnosti, prinudna naplata kazni i finansijska osnova ministarstva." }, tags: ["Licensing", "Finance"] },
-      { name: { en: "ERPStream — Parliament of Montenegro", me: "ERPStream — Skupština Crne Gore" }, client: { en: "Parliament of Montenegro", me: "Skupština Crne Gore" }, blurb: { en: "The enterprise resource system for the national legislature.", me: "Sistem za upravljanje resursima nacionalnog parlamenta." }, tags: ["ERPStream", "Government"] },
-    ],
-  },
-  {
-    title: { en: "Public Finance, EU & International", me: "Javne finansije, EU i međunarodno" },
-    projects: [
-      { name: { en: "Budget & Treasury Systems — Ministry of Finance", me: "Budžetski i trezorski sistemi — Ministarstvo finansija" }, client: { en: "Ministry of Finance of Montenegro", me: "Ministarstvo finansija Crne Gore" }, blurb: { en: "Core budget execution, revenue reporting (REES) and accounts-payable for the state treasury.", me: "Izvršenje budžeta, izvještavanje o prihodima (REES) i obaveze za državni trezor." }, tags: ["Treasury", "Public Finance"] },
-      { name: { en: "eCES — EU Funds Contract Execution", me: "eCES — izvršenje ugovora EU fondova" }, client: { en: "Directorate for Finance & Contracting of EU Assistance Funds", me: "Direkcija za finansiranje i ugovaranje sredstava EU" }, blurb: { en: "The system through which Montenegro administers and reports on EU pre-accession assistance contracts.", me: "Sistem za administriranje i izvještavanje o ugovorima pretpristupne pomoći EU." }, tags: ["EU", "Compliance"] },
-      { name: { en: "UNIDO — Industry & Cluster Web Portals", me: "UNIDO — portali za industriju i klastere" }, client: { en: "United Nations Industrial Development Organization", me: "Organizacija UN za industrijski razvoj (UNIDO)" }, blurb: { en: "Multiple public web portals delivered for a United Nations agency, including the metal-cluster platform.", me: "Više javnih portala za agenciju UN, uključujući platformu za metalski klaster." }, tags: ["UN", "International"] },
-    ],
-  },
-  {
-    title: { en: "Enterprise & Sector Credibility", me: "Korporativni kredibilitet" },
-    projects: [
-      { name: { en: "ERPStream on Oracle 12c — ERSTE Bank", me: "ERPStream na Oracle 12c — ERSTE banka" }, client: { en: "ERSTE Bank AD Podgorica", me: "ERSTE banka AD Podgorica" }, blurb: { en: "ERP upgrade and migration to current Oracle 12c infrastructure for a major commercial bank.", me: "Unaprjeđenje i migracija ERP-a na Oracle 12c za veliku poslovnu banku." }, tags: ["ERPStream", "Banking"] },
-      { name: { en: "Integrated IS — RTCG National Broadcaster", me: "Integrisani IS — RTCG" }, client: { en: "Radio and Television of Montenegro", me: "Radio i Televizija Crne Gore" }, blurb: { en: "End-to-end integrated information system for the national public broadcaster.", me: "Integrisani informacioni sistem za nacionalnog javnog emitera." }, tags: ["Media", "Integration"] },
-      { name: { en: "FINStream — Accounting Agencies & SMEs", me: "FINStream — agencije i MSP" }, client: { en: "Mijons, Praksis, Mils, Agens, Platon and others", me: "Mijons, Praksis, Mils, Agens, Platon i drugi" }, blurb: { en: "Finance and accounting deployed across a portfolio of agencies and SMEs — the platform scales down-market.", me: "Finansije i računovodstvo kod niza agencija i MSP — platforma je skalabilna." }, tags: ["FINStream", "SME"] },
-    ],
-  },
-];
-
-export const SECTIONS = {
-  products: {
-    kicker: { en: "Products", me: "Proizvodi" },
-    title: { en: "Our products", me: "Naši proizvodi" },
-    lead: { en: "Five platforms — built once, deployed across the state and the market.", me: "Pet platformi — napravljene jednom, primijenjene u državi i na tržištu." },
-  },
+/* Slim conversion bands placed at peak-conviction points in the scroll
+   (right after proof, right after compliance) — see app/page.tsx. */
+export const CTA_STRIPS = {
   work: {
-    kicker: { en: "Track record", me: "Iskustvo" },
-    title: { en: "Two decades, in production", me: "Dvije decenije, u produkciji" },
-    lead: { en: "A selection of the systems we've delivered and still run — for the institutions a country cannot afford to have go down.", me: "Izbor sistema koje smo isporučili i koje održavamo — za institucije koje država ne smije da izgubi." },
+    text: { en: "Running one of these? Talk to the team that built them.", me: "Vodite neki od ovih sistema? Razgovarajte sa timom koji ih je napravio." },
+    btn: { en: "Talk to us", me: "Kontaktirajte nas" },
   },
-};
+} satisfies Record<string, { text: T; btn: T }>;
 
 /* Beyond public infrastructure — R&D + commercial work, kept as a footnote so it
    doesn't dilute the "systems a country depends on" thesis. */
@@ -384,9 +535,21 @@ export const TECHNOLOGIES = {
     me: "Stabilni, dobro poznati alati — birani zbog trajnosti, revizije i predvidivosti, ne zbog novine.",
   },
   layers: [
-    { name: { en: "Interface", me: "Interfejs" }, items: ["Angular", "JavaScript"] },
-    { name: { en: "Application", me: "Aplikacija" }, items: ["C#", ".NET"] },
-    { name: { en: "Data & platform", me: "Podaci i platforma" }, items: ["Oracle Database", "Oracle APEX", "SQL"] },
+    {
+      name: { en: "Interface", me: "Interfejs" },
+      role: { en: "What people and institutions actually touch", me: "Ono sa čime ljudi i institucije zaista rade" },
+      items: ["Angular", "JavaScript"],
+    },
+    {
+      name: { en: "Application", me: "Aplikacija" },
+      role: { en: "Business logic, workflows and rules", me: "Poslovna logika, tokovi i pravila" },
+      items: ["C#", ".NET"],
+    },
+    {
+      name: { en: "Data & platform", me: "Podaci i platforma" },
+      role: { en: "The system of record and runtime", me: "Sistem evidencije i izvršno okruženje" },
+      items: ["Oracle Database", "Oracle APEX", "SQL"],
+    },
   ],
 };
 
@@ -398,13 +561,37 @@ export const SECTORS = {
     me: "Dvije decenije rada u javnom i privatnom sektoru.",
   },
   items: [
-    { en: "Government & ministries", me: "Vlada i ministarstva" },
-    { en: "Tax & public finance", me: "Porezi i javne finansije" },
-    { en: "Defense & security", me: "Odbrana i bezbjednost" },
-    { en: "Funds & agencies", me: "Fondovi i agencije" },
-    { en: "Banking & enterprise", me: "Banke i privreda" },
-    { en: "Media & utilities", me: "Mediji i komunalije" },
-  ] as T[],
+    {
+      icon: "gov" as const,
+      name: { en: "Government & ministries", me: "Vlada i ministarstva" },
+      note: { en: "Ministries and central administration", me: "Ministarstva i centralna uprava" },
+    },
+    {
+      icon: "tax" as const,
+      name: { en: "Tax & public finance", me: "Porezi i javne finansije" },
+      note: { en: "Revenue, treasury and budgeting", me: "Prihodi, trezor i budžet" },
+    },
+    {
+      icon: "defense" as const,
+      name: { en: "Defense & security", me: "Odbrana i bezbjednost" },
+      note: { en: "Armed forces and security agencies", me: "Vojska i bezbjednosne agencije" },
+    },
+    {
+      icon: "funds" as const,
+      name: { en: "Funds & agencies", me: "Fondovi i agencije" },
+      note: { en: "Public funds and agencies", me: "Javni fondovi i agencije" },
+    },
+    {
+      icon: "bank" as const,
+      name: { en: "Banking & enterprise", me: "Banke i privreda" },
+      note: { en: "Banks and enterprise operations", me: "Banke i privredni subjekti" },
+    },
+    {
+      icon: "media" as const,
+      name: { en: "Media & utilities", me: "Mediji i komunalije" },
+      note: { en: "Broadcasters and utilities", me: "Mediji i komunalna preduzeća" },
+    },
+  ],
 };
 
 export const FAQ = {
